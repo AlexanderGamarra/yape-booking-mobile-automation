@@ -62,7 +62,8 @@ public class BookingStepDefinition {
             count++;
             if(count==2){
                 bookingSteps.reserveRoom(columns.get(0).toString(),columns.get(1).toString(),columns.get(2).toString(),
-                        columns.get(3).toString(),columns.get(4).toString());
+                        columns.get(3).toString(),columns.get(4).toString(),columns.get(5).toString(),
+                        columns.get(6).toString(),columns.get(7).toString());
             }
         }
     }
@@ -79,12 +80,12 @@ public class BookingStepDefinition {
 
     @Then("Se elige la forma de pago tarjeta de credito")
     public void seEligeLaFormaDePagoTarjetaDeCredito() {
-
+        if(!Hook.creditCardItNeeded.equals(""))
+            bookingSteps.fillCreditCard();
     }
 
     @And("Se verifica el costo de la reserva")
     public void seVerificaElCostoDeLaReserva() throws Exception {
         bookingSteps.verifyTotalAmounts();
-
     }
 }

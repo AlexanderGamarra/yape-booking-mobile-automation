@@ -35,12 +35,16 @@ public class BookingSteps {
         bookingMobileObject.getPrincipalPrice();
         bookingMobileObject.getTaxes();
     }
-    public void reserveRoom(String name, String lastName, String mail, String country, String phoneNumber ) throws Exception {
-        bookingMobileObject.reserveRoom(name,lastName,mail,country,phoneNumber);
+    public void reserveRoom(String name, String lastName, String mail,String address,String zipCode,String city, String country, String phoneNumber ) throws Exception {
+        bookingMobileObject.reserveRoom(name,lastName,mail,address,zipCode,city,country,phoneNumber);
     }
 
     public void verifyTotalAmounts() throws Exception {
         bookingMobileObject.verifyTotalAmounts();
+    }
+
+    public void fillCreditCard() {
+        bookingMobileObject.fillCreditCard();
     }
 }
 

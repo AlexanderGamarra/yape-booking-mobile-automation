@@ -17,6 +17,7 @@ public class Hook {
     public static AndroidDriver driver;
     public static String principalPrice = "";
     public static String taxesPrice = "";
+    public static String creditCardItNeeded="";
 
     public static void init() throws MalformedURLException {
         try{
