@@ -43,8 +43,8 @@ public class BookingSteps {
         bookingMobileObject.verifyTotalAmounts();
     }
 
-    public void fillCreditCard() {
-        bookingMobileObject.fillCreditCard();
+    public void fillCreditCard(String PAM, String name, String exp) {
+        bookingMobileObject.fillCreditCard(PAM,name,exp);
     }
 }
 

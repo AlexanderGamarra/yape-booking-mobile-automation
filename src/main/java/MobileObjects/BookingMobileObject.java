@@ -226,6 +226,16 @@ public class BookingMobileObject {
         } catch (Exception e) {throw new Exception("No se pudo comparar los precios + actualizar mobile elements" + e.getMessage());}
     }
 
-    public void fillCreditCard() {
+    public void fillCreditCard(String PAM, String name, String exp) {
+        if(!Hook.creditCardItNeeded.equals("")){
+            try{
+                Hook.driver.findElement(By.id("com.booking:id/action_pam")).sendKeys(PAM);
+                Thread.sleep(2000);
+                Hook.driver.findElement(By.id("com.booking:id/action_pam")).sendKeys(PAM);
+                Thread.sleep(1000);
+                Hook.driver.findElement(By.id("com.booking:id/action_pam")).sendKeys(PAM);
+                Thread.sleep(1000);
+            }catch (Exception ignored){}
+        }
     }
 }

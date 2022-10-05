@@ -79,13 +79,16 @@ public class BookingStepDefinition {
     }
 
     @Then("Se elige la forma de pago tarjeta de credito")
-    public void seEligeLaFormaDePagoTarjetaDeCredito() {
-        try {
-            if (!Hook.creditCardItNeeded.equals(""))
-                bookingSteps.fillCreditCard();
-        }catch (Exception ignored){}
+    public void seEligeLaFormaDePagoTarjetaDeCredito(@NotNull DataTable table) throws Exception {
+        List<List<Object>> rows = table.asLists(String.class);
+        int count = 0;
+        for (List<Object> columns : rows) {
+            count++;
+            if(count==2){
+                bookingSteps.fillCreditCard(columns.get(0).toString(),columns.get(1).toString(),columns.get(2).toString());
+            }
+        }
     }
-
     @And("Se verifica el costo de la reserva")
     public void seVerificaElCostoDeLaReserva() throws Exception {
         bookingSteps.verifyTotalAmounts();
@@ -95,7 +98,7 @@ public class BookingStepDefinition {
     public void seVerificaElCostoDeLaReservaDespuesDelPago() {
         try {
             if (!Hook.creditCardItNeeded.equals(""))
-                bookingSteps.fillCreditCard();
+                bookingSteps.verifyTotalAmounts();
         }catch (Exception ignored){};
     }
 }
