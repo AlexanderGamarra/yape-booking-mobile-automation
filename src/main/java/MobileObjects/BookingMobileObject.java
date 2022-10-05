@@ -187,7 +187,7 @@ public class BookingMobileObject {
                 autoCompleteView.get(1).clear();
                 autoCompleteView.get(1).sendKeys(country);
                 Thread.sleep(1000);
-                formsPartI.get(4).sendKeys(phoneNumber);
+                formsPartI.get(3).sendKeys(phoneNumber);
                 Hook.driver.findElement(By.id("com.booking:id/action_button")).click();
                 Thread.sleep(3000);
             }

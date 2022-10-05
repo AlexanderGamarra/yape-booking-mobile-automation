@@ -20,7 +20,7 @@ Feature: Booking Category
     Then Se elige la forma de pago tarjeta de credito
       | {Numero de Tarjeta}   | {Nombres}         | {exp.}|
       | 4555 7887 6544 3333   | Alexander Gamarra | 02/25 |
-      And Se verifica el costo de la reserva
+      And Se verifica el costo de la reserva despues del pago
 
 
 

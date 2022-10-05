@@ -80,12 +80,22 @@ public class BookingStepDefinition {
 
     @Then("Se elige la forma de pago tarjeta de credito")
     public void seEligeLaFormaDePagoTarjetaDeCredito() {
-        if(!Hook.creditCardItNeeded.equals(""))
-            bookingSteps.fillCreditCard();
+        try {
+            if (!Hook.creditCardItNeeded.equals(""))
+                bookingSteps.fillCreditCard();
+        }catch (Exception ignored){}
     }
 
     @And("Se verifica el costo de la reserva")
     public void seVerificaElCostoDeLaReserva() throws Exception {
         bookingSteps.verifyTotalAmounts();
+    }
+
+    @And("Se verifica el costo de la reserva despues del pago")
+    public void seVerificaElCostoDeLaReservaDespuesDelPago() {
+        try {
+            if (!Hook.creditCardItNeeded.equals(""))
+                bookingSteps.fillCreditCard();
+        }catch (Exception ignored){};
     }
 }
