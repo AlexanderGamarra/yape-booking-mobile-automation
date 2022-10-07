@@ -2,16 +2,13 @@ package MobileObjects;
 
 import Entities.Booking;
 import Utilities.Hook;
-import io.appium.java_client.AppiumBy;
-import io.appium.java_client.MobileBy;
 import io.appium.java_client.android.nativekey.AndroidKey;
 import io.appium.java_client.android.nativekey.KeyEvent;
-import org.junit.internal.builders.IgnoredBuilder;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.touch.TouchActions;
 
-import java.time.Duration;
-import java.util.concurrent.TimeUnit;
+import java.util.List;
 
 import static java.lang.Thread.sleep;
 
@@ -40,11 +37,12 @@ public class BookingMobileObject {
     String applyButton = "com.booking:id/group_config_apply_button";
     String searchButton = "com.booking:id/facet_search_box_cta";
     String chooseSecondItemImg = "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.view.ViewGroup/android.widget.FrameLayout/android.widget.LinearLayout/android.view.ViewGroup/android.widget.FrameLayout/androidx.recyclerview.widget.RecyclerView/android.view.ViewGroup[3]/android.view.ViewGroup/android.view.ViewGroup[1]/android.widget.ImageView";
-
-    String selectRoom = "com.booking:id/select_room_cta";
+    String chooseSecondItemImg2 = "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.view.ViewGroup/android.widget.FrameLayout/android.widget.LinearLayout/android.view.ViewGroup/android.widget.FrameLayout/androidx.recyclerview.widget.RecyclerView/android.view.ViewGroup[4]/android.view.ViewGroup/android.view.ViewGroup[1]/android.widget.ImageView";
+    String goToselectRoom = "com.booking:id/select_room_cta";
+    String selectItem ="com.booking:id/main_action";
     String reserveTheseOptions ="com.booking:id/recommended_block_reserve_button";
     String addMissingDetails = "";
-    String reserveRoom ="com.booking:id/main_action";
+
 
     public void verifyHomePageLoads() throws InterruptedException {
         Hook.driver.findElement(By.xpath(closeRegistrationView)).click();
@@ -86,8 +84,11 @@ public class BookingMobileObject {
             TouchActions action = new TouchActions(Hook.driver);
             action.scroll(Hook.driver.findElement(By.id("com.booking:id/calendar_month_list")), 0, 400);
             action.perform();
-                //Hook.driver.findElement(By.xpath(startDate)).click();
-                //Hook.driver.findElement(By.xpath(finalDate)).click();
+            try{
+                Hook.driver.findElement(By.xpath(startDate)).click();
+                Thread.sleep(2000);
+                Hook.driver.findElement(By.xpath(finalDate)).click();
+            }catch (Exception ignored){};
 
             sleep(2000);
             Hook.driver.findElement(By.id(selectDatesButton)).click();
@@ -128,54 +129,113 @@ public class BookingMobileObject {
 
     public void chooseSecondItem() throws Exception {
         try {
+            //If there aren't ads
             sleep(6000);
             Hook.driver.findElement(By.xpath(chooseSecondItemImg)).click();
-        } catch (Exception e) {throw new Exception("No se encontro el boton buscar" + e.getMessage());}
+        } catch (Exception e) {Hook.driver.findElement(By.xpath(chooseSecondItemImg2)).click();}
     }
-
     public void selectRoom() throws Exception {
         try {
             sleep(2000);
-            Hook.driver.findElement(By.id(selectRoom)).click();
+            Hook.driver.findElement(By.id(goToselectRoom)).click();
             sleep(5000);
+            //Selecting room
             try{
-                if(!Hook.driver.findElement(By.id("com.booking:id/recommended_block_reserve_button")).isDisplayed()){
-                    TouchActions action = new TouchActions(Hook.driver);
-                    action.scroll(Hook.driver.findElement(By.id("com.booking:id/rooms_recycler_view")), 0, 100);
-                    action.perform();
-                    Hook.driver.findElement(By.id("com.booking:id/rooms_item_select_text_view")).click();
-                    sleep(4000);
-                }
-            }catch (Exception ignored){};
-            Hook.driver.findElement(By.id(reserveTheseOptions)).click();
-            sleep(5000);
+                //If there are options
+                Hook.driver.findElement(By.id("com.booking:id/listitem_info_icon")).click();
+                sleep(12000);
+                Hook.driver.findElement(By.id(selectItem)).click();
+                sleep(10000);
+            }catch (Exception ignored){
+                //If not there are options
+                Hook.driver.findElement(By.id(reserveTheseOptions)).click();
+                sleep(10000);
+            };
         } catch (Exception e) {throw new Exception("No se pudo seleccionar la habitación" + e.getMessage());}
     }
     public void getPrincipalPrice() throws Exception {
         try {
-            Hook.principalPrice = Hook.driver.findElement(By.id("com.booking:id/recommended_block_item_price_view")).getText();
+            Hook.principalPrice = Hook.driver.findElement(By.id("com.booking:id/title")).getText();
         } catch (Exception e) {throw new Exception("No se pudo reservar la habitación" + e.getMessage());}
     }
 
     public void getTaxes() throws Exception {
         try {
-            Hook.taxesPrice = Hook.driver.findElement(By.id("com.booking:id/recommended_block_taxes_charges_view")).getText();
+            Hook.taxesPrice = Hook.driver.findElement(By.id("com.booking:id/subtitle")).getText();
         } catch (Exception e) {throw new Exception("No se pudo reservar la habitación" + e.getMessage());}
     }
-    public void reserveRoom(String name, String lastName, String mail, String country, String phoneNumber) throws Exception {
+    public void reserveRoom(String name, String lastName, String mail, String address, String zipCode,String city, String country, String phoneNumber) throws Exception {
         try {
-
-        } catch (Exception e) {throw new Exception("No se pudo reservar la habitación" + e.getMessage());}
+            List<WebElement> formsPartI = Hook.driver.findElements(By.xpath("//android.widget.EditText"));
+            List<WebElement> autoCompleteView = Hook.driver.findElements(By.xpath("//android.widget.AutoCompleteTextView"));
+            if(formsPartI.size()==5) {
+                formsPartI.get(0).sendKeys(name);
+                Thread.sleep(1000);
+                formsPartI.get(1).sendKeys(lastName);
+                Thread.sleep(1000);
+                autoCompleteView.get(0).sendKeys(mail);
+                Thread.sleep(1000);
+                formsPartI.get(2).sendKeys(address);
+                Thread.sleep(1000);
+                formsPartI.get(3).sendKeys(zipCode);
+                Thread.sleep(1000);
+                formsPartI.get(4).sendKeys(city);
+                Hook.driver.findElement(By.id("com.booking:id/action_button")).click();
+                Thread.sleep(3000);
+                formsPartI = Hook.driver.findElements(By.xpath("//android.widget.EditText"));
+                autoCompleteView = Hook.driver.findElements(By.xpath("//android.widget.AutoCompleteTextView"));
+                autoCompleteView.get(1).clear();
+                autoCompleteView.get(1).sendKeys(country);
+                Thread.sleep(1000);
+                formsPartI.get(3).sendKeys(phoneNumber);
+                Hook.driver.findElement(By.id("com.booking:id/action_button")).click();
+                Thread.sleep(3000);
+            }
+            else{
+                formsPartI.get(0).sendKeys(name);
+                Thread.sleep(1000);
+                formsPartI.get(1).sendKeys(lastName);
+                Thread.sleep(1000);
+                autoCompleteView.get(0).sendKeys(mail);
+                Thread.sleep(1000);
+                autoCompleteView.get(1).clear();
+                autoCompleteView.get(1).sendKeys(country);
+                Thread.sleep(1000);
+                formsPartI.get(2).sendKeys(phoneNumber);
+                Thread.sleep(1000);
+                Hook.driver.findElement(By.id("com.booking:id/action_button")).click();
+                Thread.sleep(3000);
+            }
+            Thread.sleep(10000);
+        } catch (Exception ignored) {}
     }
-
     public void verifyTotalAmounts() throws Exception {
         try {
-            if(Hook.principalPrice.equals(Hook.driver.findElement(By.id("com.booking:id/recommended_block_item_price_view")).getText()))
+            if(Hook.principalPrice.equals(Hook.driver.findElement(By.id("com.booking:id/title")).getText()))
                 throw new Exception("El precio total no coincide");
 
-            if(Hook.taxesPrice.equals(Hook.driver.findElement(By.id("com.booking:id/recommended_block_taxes_charges_view")).getText()))
+            if(Hook.taxesPrice.equals(Hook.driver.findElement(By.id("com.booking:id/subtitle")).getText()))
                 throw new Exception("El precio total no coincide");
 
-        } catch (Exception e) {throw new Exception("No se pudo comparar los precios" + e.getMessage());}
+            //FinalSteps
+            try {
+                Hook.creditCardItNeeded = Hook.driver.findElement(By.id("com.booking:id/banner_title")).getText()  ;
+            } catch (Exception ignored){};
+            Hook.driver.findElement(By.id("com.booking:id/action_button")).click();
+            Thread.sleep(10000);
+        } catch (Exception e) {throw new Exception("No se pudo comparar los precios + actualizar mobile elements" + e.getMessage());}
+    }
+
+    public void fillCreditCard(String PAM, String name, String exp) {
+        if(!Hook.creditCardItNeeded.equals("")){
+            try{
+                Hook.driver.findElement(By.id("com.booking:id/action_pam")).sendKeys(PAM);
+                Thread.sleep(2000);
+                Hook.driver.findElement(By.id("com.booking:id/action_pam")).sendKeys(PAM);
+                Thread.sleep(1000);
+                Hook.driver.findElement(By.id("com.booking:id/action_pam")).sendKeys(PAM);
+                Thread.sleep(1000);
+            }catch (Exception ignored){}
+        }
     }
 }
